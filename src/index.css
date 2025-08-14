@@ -1,0 +1,134 @@
+@import "tailwindcss";
+@config "../tailwind.config.ts";
+
+@font-face {
+  font-family: "Knight Font";
+  font-style: normal;
+  font-weight: 200 700;
+  font-display: swap;
+  src: url("/fonts/bold_game_font.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "Ribbion Black Font";
+  font-weight: 900;
+  font-display: swap;
+  src: url("/fonts/ribbion_black.ttf") format("truetype");
+}
+
+:root {
+  /* Monochrome color palette - Updated for lighter theme */
+  --color-primary: #fbfbfb;
+  --color-secondary: #aaaaaa;
+  --color-tertiary: #333333;
+  --color-quaternary: #666666;
+  --color-muted: #888888;
+  --color-light: #aaaaaa;
+  --color-lighter: #cccccc;
+  --color-lightest: #e8e8e8;
+  --color-white: #ffffff;
+  --color-background: #f5f5f5;
+
+  /* Surface colors - Updated for light theme */
+  --color-surface: #f5f5f5;
+  --color-surface-secondary: #ffffff;
+  --color-surface-tertiary: #fafafa;
+  --color-card: #ffffff;
+  --color-card-hover: #f9f9f9;
+
+  /* Interactive states */
+  --color-hover: #f0f0f0;
+  --color-active: #e8e8e8;
+  --color-focus: #d4d4d4;
+
+  /* Borders and dividers */
+  --color-border: #e0e0e0;
+  --color-border-light: #f0f0f0;
+  --color-border-dark: #d0d0d0;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  --shadow-card: 0 2px 8px 0 rgb(0 0 0 / 0.1);
+
+  /* Typography */
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --font-game-bold: "Ribbion Black Font", sans-serif;
+  --font-game: "Knight Font", sans-serif;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Open Sans", "Helvetica Neue", sans-serif;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Sprite Animation Styles */
+
+.sprite-container {
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  transition: background-position 0.016s linear; /* Smooth 60fps transitions */
+}
+
+/* Smooth sprite transitions */
+.sprite-animation {
+  transition: background-position 0.1s ease-in-out;
+}
+
+/* Hand gesture animations */
+@keyframes rock-animation {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+@keyframes paper-animation {
+  0% {
+    transform: translateX(0px);
+  }
+  50% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(0px);
+  }
+}
+
+@keyframes scissors-animation {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.rock-gesture {
+  animation: rock-animation 0.5s ease-in-out;
+}
+
+.paper-gesture {
+  animation: paper-animation 0.5s ease-in-out;
+}
+
+.scissors-gesture {
+  animation: scissors-animation 0.5s ease-in-out;
+}
