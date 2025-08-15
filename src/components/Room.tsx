@@ -4,7 +4,6 @@ import { useGameLogic } from "../hooks/useGameLogic";
 import type { Choice } from "../hooks/useGameLogic";
 import {
   HandSprite,
-  GameHeader,
   GameStatus,
   ActionButtons,
   GameResultDialog,
@@ -45,24 +44,23 @@ export default function Room() {
   };
 
   return (
-    <div className="h-screen bg-primary p-6 flex flex-col justify-between overflow-hidden">
-      <GameHeader
-        currentRound={gameState.currentRound}
-        totalRounds={config.rounds}
-        playerScore={gameState.playerScore}
-        computerScore={gameState.computerScore}
-      />
+    <div className="h-screen flex flex-col justify-between overflow-hidden max-w-md mx-auto">
+      <div className="absolute top-[80%] left-0 -translate-y-1/2 -rotate-90 text-5xl font-game text-gray-300/60 tracking-widest opacity-80 select-none">
+        Player
+      </div>
+      <div className="absolute top-[20%] -right-0 -translate-y-1/2 rotate-90 text-5xl font-game text-gray-300/60 tracking-widest opacity-80 select-none">
+        Computer
+      </div>
 
       <div className="flex-1 flex flex-col justify-between items-center">
         <div className="flex justify-center">
           <HandSprite
-            className="relative -mt-10"
+            className="relative"
             animation={gameState.computerAnimation}
             isPlayer={false}
           />
         </div>
 
-        {/* Center Status */}
         <div className="text-center z-10">
           <GameStatus
             phase={gameState.phase}
@@ -76,18 +74,18 @@ export default function Room() {
           />
         </div>
 
-        {/* Player Hand */}
         <div className="-mb-10">
           <HandSprite animation={gameState.playerAnimation} isPlayer={true} />
         </div>
         <ActionButtons
           isVisible={gameState.phase === "playing"}
           onChoiceSelect={handleChoice}
-          disabled={gameState.selectionTimer <= 0}
+          disabled={
+            gameState.selectionTimer <= 0 || gameState.phase !== "playing"
+          }
         />
       </div>
 
-      {/* Result Dialog */}
       <GameResultDialog
         isOpen={gameState.phase === "finished"}
         onClose={() => {}}

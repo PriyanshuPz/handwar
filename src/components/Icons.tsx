@@ -22,5 +22,5 @@ export function ElementIcon({ element }: { element: Choice }) {
     scissors: <ScissorsIcon />,
   };
 
-  return <div className="w-12 h-12">{icons[element]}</div>;
+  return <div className="w-20 h-20">{icons[element]}</div>;
 }

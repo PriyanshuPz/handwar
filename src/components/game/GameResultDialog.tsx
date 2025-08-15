@@ -23,9 +23,9 @@ export function GameResultDialog({
   onGoHome,
 }: GameResultDialogProps) {
   const getResultMessage = () => {
-    if (gameWinner === "player") return "🎉 You Won!";
-    if (gameWinner === "computer") return "😔 You Lost!";
-    return "🤝 It's a Draw!";
+    if (gameWinner === "player") return " You Won!";
+    if (gameWinner === "computer") return "You Lost!";
+    return "It's a Draw!";
   };
 
   const getResultColor = () => {
@@ -43,7 +43,7 @@ export function GameResultDialog({
   };
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose}>
+    <Dialog isOpen={isOpen} onClose={onClose} closeButton={false}>
       <div className="text-center space-y-6">
         <h2 className={`text-4xl font-game ${getResultColor()}`}>
           {getResultMessage()}
@@ -65,12 +65,10 @@ export function GameResultDialog({
         </div>
 
         <div className="space-y-3">
-          <Button onClick={onReplay} className="bg-blue-500 text-white">
-            🎮 Play Again
+          <Button onClick={onReplay} variant="blue">
+            Play Again
           </Button>
-          <Button onClick={onGoHome} className="bg-gray-500 text-white">
-            🏠 Home
-          </Button>
+          <Button onClick={onGoHome}>Home</Button>
         </div>
       </div>
     </Dialog>

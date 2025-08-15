@@ -10,7 +10,6 @@ interface ActionButtonsProps {
 }
 
 export function ActionButtons({
-  isVisible,
   onChoiceSelect,
   disabled = false,
 }: ActionButtonsProps) {
@@ -18,25 +17,24 @@ export function ActionButtons({
 
   return (
     <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
-          className="flex justify-center space-x-6"
-        >
-          {choices.map((choice) => (
-            <Button
-              onClick={() => onChoiceSelect(choice)}
-              disabled={disabled}
-              variant="icon"
-              className="w-14 h-14 flex items-center justify-center"
-            >
-              <ElementIcon element={choice} />
-            </Button>
-          ))}
-        </motion.div>
-      )}
+      <motion.div
+        initial={{ y: 100, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        exit={{ y: 100, opacity: 0 }}
+        className="flex justify-center space-x-6 py-4 -mt-10"
+      >
+        {choices.map((choice) => (
+          <Button
+            key={choice}
+            onClick={() => onChoiceSelect(choice)}
+            disabled={disabled}
+            variant="default"
+            className="w-20 h-20 bg-white p-2 pt-6 flex items-center justify-center"
+          >
+            <ElementIcon element={choice} />
+          </Button>
+        ))}
+      </motion.div>
     </AnimatePresence>
   );
 }

@@ -8,14 +8,20 @@ interface DialogProps {
   onClose: () => void;
   children: React.ReactNode;
   title?: string;
+  closeButton?: boolean;
 }
 
-export function Dialog({ isOpen, onClose, children, title }: DialogProps) {
+export function Dialog({
+  isOpen,
+  onClose,
+  children,
+  title,
+  closeButton = true,
+}: DialogProps) {
   return (
     <AnimatePresence>
       {isOpen && (
         <>
-          {/* Backdrop */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -24,7 +30,6 @@ export function Dialog({ isOpen, onClose, children, title }: DialogProps) {
             onClick={onClose}
           />
 
-          {/* Dialog */}
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -32,12 +37,14 @@ export function Dialog({ isOpen, onClose, children, title }: DialogProps) {
             className="fixed inset-0 z-50 flex items-center justify-center p-4"
           >
             <div className="bg-white border-4 border-black rounded-2xl p-6 w-full max-w-md relative shadow-[0_8px_0px_0px_#000]">
-              <button
-                onClick={onClose}
-                className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
-              >
-                <X size={20} />
-              </button>
+              {closeButton && (
+                <button
+                  onClick={onClose}
+                  className="absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full transition-colors"
+                >
+                  <X size={20} />
+                </button>
+              )}
               {title && (
                 <h2 className="text-2xl font-bold text-gray-900 mb-4 pr-8">
                   {title}

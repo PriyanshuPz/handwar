@@ -81,10 +81,7 @@ export default function Home() {
       </div>
 
       <div className="flex space-y-2 flex-col w-full max-w-md mt-4">
-        <Button
-          className="bg-blue-500 text-white h-16"
-          onClick={handlePlayClick}
-        >
+        <Button variant="blue" onClick={handlePlayClick}>
           Play
         </Button>
         <Button>Online</Button>
@@ -148,10 +145,7 @@ export default function Home() {
             >
               Cancel
             </Button>
-            <Button
-              onClick={handleConfirm}
-              className="bg-blue-500 text-white h-16"
-            >
+            <Button onClick={handleConfirm} variant="blue">
               Confirm
             </Button>
           </div>
