@@ -4,7 +4,7 @@ import { Dialog } from "../ui/Dialog";
 interface GameResultDialogProps {
   isOpen: boolean;
   onClose: () => void;
-  gameWinner: "player" | "computer" | "draw" | null;
+  gameWinner: string | null;
   playerScore: number;
   computerScore: number;
   totalRounds: number;

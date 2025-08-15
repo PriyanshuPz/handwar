@@ -10,7 +10,7 @@ interface GameStatusProps {
   selectionTimer: number;
   currentRound: number;
   totalRounds: number;
-  roundWinner: "player" | "computer" | "draw" | null;
+  roundWinner: string | null;
   onStartRound: () => void;
   onNextRound: () => void;
 }

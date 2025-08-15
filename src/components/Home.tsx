@@ -1,39 +1,39 @@
 import { motion } from "framer-motion";
 import { Button } from "./ui/button";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Dialog } from "./ui";
 import { Star } from "lucide-react";
+import { useAuth } from "../contexts/AuthContext";
+import OnlineLobbyDialog from "./OnlineLobby";
+import { useGameStore } from "../store/gameStore";
+import { handleOnlinePlay } from "../services/gameService";
+import SinglePlayerRoomConfigDialog from "../singleplayer/components/SinglePlayerRoomConfigDialog";
+import { useState } from "react";
 
 export default function Home() {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [rounds, setRounds] = useState<3 | 5 | 7>(3);
-  const [waitTime, setWaitTime] = useState<3 | 5>(3);
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const { isOnlineDialogOpen, isOnboarded, setIsOnlineDialogOpen } =
+    useGameStore();
 
   const handlePlayClick = () => {
     setIsDialogOpen(true);
   };
 
+  const handleOnlinePlayClick = () => {
+    handleOnlinePlay(user);
+  };
+
   const handleConfirm = () => {
     setIsDialogOpen(false);
-
-    sessionStorage.setItem(
-      "gameConfig",
-      JSON.stringify({ rounds, waitTime, mode: "computer" })
-    );
-
-    navigate("/room", {
-      state: {
-        rounds,
-        waitTime,
-        mode: "computer",
-      },
-    });
+    navigate("/room");
   };
+
   return (
     <div className="min-h-screen p-6 bg-primary flex items-center justify-between flex-col space-y-2">
-      <div></div>
+      <div />
       <div className="flex flex-col items-center justify-center space-y-4 w-full">
         <div className="relative text-center overflow-hidden transform -rotate-8 w-full h-full">
           <motion.div
@@ -84,73 +84,20 @@ export default function Home() {
         <Button variant="blue" onClick={handlePlayClick}>
           Play
         </Button>
-        <Button>Online</Button>
+        <Button onClick={handleOnlinePlayClick}>Online</Button>
       </div>
-      <Dialog
-        isOpen={isDialogOpen}
+
+      <SinglePlayerRoomConfigDialog
+        handleConfirm={handleConfirm}
+        isDialogOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
-        title="Configure Room"
-      >
-        <div className="space-y-6">
-          {/* Rounds Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Number of Rounds
-            </label>
-            <div className="flex gap-3">
-              {([3, 5, 7] as const).map((round) => (
-                <button
-                  key={round}
-                  onClick={() => setRounds(round)}
-                  className={`px-6 py-3 rounded-lg border-2 font-medium transition-all ${
-                    rounds === round
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-gray-300 hover:border-gray-400 text-gray-700"
-                  }`}
-                >
-                  {round}
-                </button>
-              ))}
-            </div>
-          </div>
+      />
 
-          {/* Wait Time Selection */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-3">
-              Wait Time (seconds)
-            </label>
-            <div className="flex gap-3">
-              {([3, 5] as const).map((time) => (
-                <button
-                  key={time}
-                  onClick={() => setWaitTime(time)}
-                  className={`px-6 py-3 rounded-lg border-2 font-medium transition-all ${
-                    waitTime === time
-                      ? "border-blue-500 bg-blue-50 text-blue-700"
-                      : "border-gray-300 hover:border-gray-400 text-gray-700"
-                  }`}
-                >
-                  {time}s
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Action Buttons */}
-          <div className="flex gap-3 pt-4">
-            <Button
-              onClick={() => setIsDialogOpen(false)}
-              variant="outline"
-              className="flex-1"
-            >
-              Cancel
-            </Button>
-            <Button onClick={handleConfirm} variant="blue">
-              Confirm
-            </Button>
-          </div>
-        </div>
-      </Dialog>
+      <OnlineLobbyDialog
+        isOnboarded={isOnboarded}
+        isOpen={isOnlineDialogOpen}
+        onClose={() => setIsOnlineDialogOpen(false)}
+      />
     </div>
   );
 }

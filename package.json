@@ -21,8 +21,11 @@
     "react-dom": "^19.1.1",
     "react-router-dom": "^7.8.0",
     "react-sprite-animator": "^2.0.2",
+    "sonner": "^2.0.7",
     "tailwind-merge": "^3.3.1",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "use-sound": "^5.0.0",
+    "zustand": "^5.0.7"
   },
   "devDependencies": {
     "@eslint/js": "^9.33.0",
