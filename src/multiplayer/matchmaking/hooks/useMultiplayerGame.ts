@@ -10,7 +10,7 @@ export function useMultiplayerGame(roomId: string, playerUid: string) {
   const gameServiceRef = useRef<MultiplayerGameService | null>(null);
   const unsubscribeRef = useRef<(() => void) | null>(null);
 
-  const { syncFromFirebase, setConnected, setError, leaveGame } =
+  const { syncFromFirebase, setConnected, setError } =
     useMultiplayerGameStore();
 
   // Initialize game service and subscribe to room updates
