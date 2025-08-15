@@ -4,7 +4,7 @@ import {
   signInWithPopup,
   signOut,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import app, { db } from "../lib/firebase";
 
 const auth = getAuth(app);
@@ -14,15 +14,20 @@ export const loginWithGoogle = async () => {
   try {
     const result = await signInWithPopup(auth, provider);
     const user = result.user;
-    const userDoc = await getDoc(doc(db, "users", user.uid));
-    if (!userDoc.exists()) {
-      // New user, needs onboarding
-      return { user, isOnboarded: false };
-    }
-    return { user, isOnboarded: true };
+    return { user };
   } catch (error) {
     console.error("Error during Google login:", error);
-    return { user: null, isOnboarded: false };
+    return { user: null };
+  }
+};
+
+export const getCurrentUser = async () => {
+  if (auth.currentUser) {
+    return auth.currentUser;
+  } else {
+    const result = await signInWithPopup(auth, provider);
+    const user = result.user;
+    return user;
   }
 };
 

@@ -7,13 +7,17 @@ import OnlineLobbyDialog from "./OnlineLobby";
 import { useGameStore } from "../store/gameStore";
 import { handleOnlinePlay } from "../services/gameService";
 import SinglePlayerRoomConfigDialog from "../singleplayer/components/SinglePlayerRoomConfigDialog";
+import { MatchmakingLobby } from "../multiplayer/matchmaking";
+import { Dialog } from "./ui";
 import { useState } from "react";
+import { loginWithGoogle } from "../services/firebase";
 
 export default function Home() {
   const navigate = useNavigate();
   const { user } = useAuth();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isQuickMatchOpen, setIsQuickMatchOpen] = useState(false);
 
   const { isOnlineDialogOpen, isOnboarded, setIsOnlineDialogOpen } =
     useGameStore();
@@ -24,6 +28,18 @@ export default function Home() {
 
   const handleOnlinePlayClick = () => {
     handleOnlinePlay(user);
+  };
+
+  const handleQuickMatchClick = async () => {
+    if (!user) {
+      const { user: newUser } = await loginWithGoogle();
+      if (newUser) {
+        setIsQuickMatchOpen(true);
+      } else {
+        // Login failed
+      }
+    }
+    setIsQuickMatchOpen(true);
   };
 
   const handleConfirm = () => {
@@ -84,7 +100,10 @@ export default function Home() {
         <Button variant="blue" onClick={handlePlayClick}>
           Play
         </Button>
-        <Button onClick={handleOnlinePlayClick}>Online</Button>
+        <Button variant="green" onClick={handleQuickMatchClick}>
+          Quick Match
+        </Button>
+        <Button onClick={handleOnlinePlayClick}>Online Rooms</Button>
       </div>
 
       <SinglePlayerRoomConfigDialog
@@ -98,6 +117,14 @@ export default function Home() {
         isOpen={isOnlineDialogOpen}
         onClose={() => setIsOnlineDialogOpen(false)}
       />
+
+      <Dialog
+        isOpen={isQuickMatchOpen}
+        onClose={() => setIsQuickMatchOpen(false)}
+        title="Quick Match"
+      >
+        <MatchmakingLobby onClose={() => setIsQuickMatchOpen(false)} />
+      </Dialog>
     </div>
   );
 }

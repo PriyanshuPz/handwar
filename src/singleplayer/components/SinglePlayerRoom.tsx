@@ -67,6 +67,13 @@ export function SinglePlayerRoom() {
     <div className="h-screen flex flex-col justify-between overflow-hidden max-w-md mx-auto">
       <RefreshRecoveryNotification />
 
+      <button
+        className="absolute top-4 right-4 bg-red-500 text-white p-2 rounded"
+        onClick={handleGoHome}
+      >
+        Quit
+      </button>
+
       <div className="absolute top-[80%] left-0 -translate-y-1/2 -rotate-90 text-5xl font-game text-gray-300/60 tracking-widest opacity-80 select-none">
         Player
       </div>
