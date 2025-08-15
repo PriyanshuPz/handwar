@@ -43,7 +43,7 @@ const getSpriteConfig = (state: AnimationState): SpriteConfig => {
         fps: 24,
         shouldAnimate: true,
         direction: "horizontal",
-        frameCount: 33,
+        frameCount: 32,
         reset: true,
       };
     case "scissors":

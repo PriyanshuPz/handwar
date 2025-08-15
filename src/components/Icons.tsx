@@ -1,6 +1,6 @@
-import Rock from "../../public/assets/icons/rock.png";
-import Paper from "../../public/assets/icons/paper.png";
-import Scissors from "../../public/assets/icons/scissors.png";
+import Rock from "../assets/icons/rock.png";
+import Paper from "../assets/icons/paper.png";
+import Scissors from "../assets/icons/scissors.png";
 import type { Choice } from "../hooks/useGameLogic";
 
 export function RockIcon() {

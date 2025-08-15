@@ -3,6 +3,7 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Dialog } from "./ui";
+import { Star } from "lucide-react";
 
 export default function Home() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -43,7 +44,7 @@ export default function Home() {
               ease: "backOut",
               delay: 0.3,
             }}
-            className="text-9xl font-game tracking-widest mr-40"
+            className="text-9xl max-sm:text-8xl font-game tracking-widest mr-40"
           >
             HAND
           </motion.div>
@@ -56,10 +57,26 @@ export default function Home() {
               ease: "backOut",
               delay: 0.7,
             }}
-            className="text-9xl font-game tracking-widest ml-40 -mt-4"
+            className="text-9xl max-sm:text-8xl font-game tracking-widest max-sm:ml-20 ml-40 -mt-4"
           >
             WAR
           </motion.div>
+        </div>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{
+            duration: 0.5,
+            ease: "easeOut",
+            delay: 1.2,
+          }}
+          className="font-game text-white max-w-md text-center bg-green-500 p-2 px-4 rounded-sm flex items-center justify-center space-x-2"
+        >
+          <Star /> <span>Now Play Online</span>
+        </motion.div>
+        <div className="text-gray-500 text-lg max-w-md text-center">
+          A simple game of war, where you can play against the computer or
+          challenge your friends online.
         </div>
       </div>
 

@@ -63,7 +63,7 @@ export default function Room() {
         </div>
 
         {/* Center Status */}
-        <div className="text-center">
+        <div className="text-center z-10">
           <GameStatus
             phase={gameState.phase}
             countdown={gameState.countdown}
@@ -77,7 +77,7 @@ export default function Room() {
         </div>
 
         {/* Player Hand */}
-        <div className="relative flex justify-center">
+        <div className="-mb-10">
           <HandSprite animation={gameState.playerAnimation} isPlayer={true} />
         </div>
         <ActionButtons

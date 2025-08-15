@@ -1,20 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=DynaPuff:wght@400..700&display=swap");
 @import "tailwindcss";
 @config "../tailwind.config.ts";
-
-@font-face {
-  font-family: "Knight Font";
-  font-style: normal;
-  font-weight: 200 700;
-  font-display: swap;
-  src: url("/fonts/bold_game_font.otf") format("opentype");
-}
-
-@font-face {
-  font-family: "Ribbion Black Font";
-  font-weight: 900;
-  font-display: swap;
-  src: url("/fonts/ribbion_black.ttf") format("truetype");
-}
 
 :root {
   /* Monochrome color palette - Updated for lighter theme */
@@ -58,8 +44,7 @@
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  --font-game-bold: "Ribbion Black Font", sans-serif;
-  --font-game: "Knight Font", sans-serif;
+  --font-game: "DynaPuff", system-ui;
 }
 
 body {

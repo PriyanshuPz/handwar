@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import type { GamePhase } from "../../hooks/useGameLogic";
 import { Button } from "../ui/button";
+import { useNavigate } from "react-router-dom";
 
 interface GameStatusProps {
   phase: GamePhase;
@@ -23,6 +24,12 @@ export function GameStatus({
   onStartRound,
   onNextRound,
 }: GameStatusProps) {
+  const navigator = useNavigate();
+
+  const backToHome = () => {
+    navigator("/");
+  };
+
   const getCountdownDisplay = () => {
     if (countdown === 0) return "GO!";
     return countdown.toString();
@@ -115,6 +122,9 @@ export function GameStatus({
               Next Round
             </Button>
           )}
+          <Button onClick={backToHome} className="bg-gray-500 text-white">
+            Back to Home
+          </Button>
         </motion.div>
       );
 

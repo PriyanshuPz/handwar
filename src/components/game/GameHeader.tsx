@@ -20,10 +20,10 @@ export function GameHeader({
       className="text-center"
     >
       <div className="flex justify-between items-center max-w-md mx-auto">
-        <div className="text-lg font-game">
+        <div className="text-2xl font-game">
           Round {currentRound}/{totalRounds}
         </div>
-        <div className="text-lg font-game">
+        <div className="text-2xl font-game">
           {playerScore} - {computerScore}
         </div>
       </div>
