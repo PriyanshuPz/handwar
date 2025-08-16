@@ -78,10 +78,10 @@ export const useSinglePlayerGameStore = create<SinglePlayerGameStore>()(
         // Show animations for 2 seconds, then reveal result
         setTimeout(() => {
           const winner = getWinner(choice, computerChoice);
-          let roundWinner: "player" | "computer" | "draw";
+          let roundWinner: "player" | "opponent" | "draw";
 
           if (winner === "player") roundWinner = "player";
-          else if (winner === "opponent") roundWinner = "computer";
+          else if (winner === "opponent") roundWinner = "opponent";
           else roundWinner = "draw";
 
           get().finishRound(roundWinner);
@@ -146,17 +146,17 @@ export const useSinglePlayerGameStore = create<SinglePlayerGameStore>()(
         const updatedPlayerScore =
           roundWinner === "player" ? state.playerScore + 1 : state.playerScore;
         const updatedComputerScore =
-          roundWinner === "computer"
+          roundWinner === "opponent"
             ? state.computerScore + 1
             : state.computerScore;
 
         // Check if game is finished
         if (state.currentRound >= state.config.rounds) {
-          let gameWinner: "player" | "computer" | "draw";
+          let gameWinner: "player" | "opponent" | "draw";
           if (updatedPlayerScore > updatedComputerScore) {
             gameWinner = "player";
           } else if (updatedComputerScore > updatedPlayerScore) {
-            gameWinner = "computer";
+            gameWinner = "opponent";
           } else {
             gameWinner = "draw";
           }
@@ -170,6 +170,8 @@ export const useSinglePlayerGameStore = create<SinglePlayerGameStore>()(
             phase: "finished",
             gameWinner,
           });
+          //
+          // add sound effect on finish
         } else {
           get().setChanceHistory([...get().chanceHistory, roundWinner]);
           set({
@@ -248,10 +250,10 @@ useSinglePlayerGameStore.subscribe(
           // Show timeout message and then reveal results
           setTimeout(() => {
             const winner = getWinner(playerChoice, computerChoice);
-            let roundWinner: "player" | "computer" | "draw";
+            let roundWinner: "player" | "opponent" | "draw";
 
             if (winner === "player") roundWinner = "player";
-            else if (winner === "opponent") roundWinner = "computer";
+            else if (winner === "opponent") roundWinner = "opponent";
             else roundWinner = "draw";
 
             state.finishRound(roundWinner);

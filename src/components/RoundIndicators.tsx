@@ -3,7 +3,7 @@ import type { RoundResult } from "../singleplayer/types";
 
 interface RoundIndicatorsProps {
   roundHistory: RoundResult[];
-  perspective: "player" | "computer";
+  perspective: "player" | "opponent";
   totalRounds: number;
 }
 
@@ -23,7 +23,7 @@ export function RoundIndicators({
     switch (playerPerspectiveResult) {
       case "player":
         return <CheckCircle className="text-green-500" size={24} />;
-      case "computer":
+      case "opponent":
         return <XCircle className="text-red-500" size={24} />;
       case "draw":
         return <CheckCircle className="text-yellow-500" size={24} />;
@@ -31,8 +31,8 @@ export function RoundIndicators({
   };
 
   const invertResult = (result: RoundResult): RoundResult => {
-    if (result === "player") return "computer";
-    if (result === "computer") return "player";
+    if (result === "player") return "opponent";
+    if (result === "opponent") return "player";
     return "draw";
   };
 

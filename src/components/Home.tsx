@@ -2,47 +2,19 @@ import { motion } from "framer-motion";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import { Star } from "lucide-react";
-import { useAuth } from "../contexts/AuthContext";
-import OnlineLobbyDialog from "./OnlineLobby";
-import { useGameStore } from "../store/gameStore";
-import { handleOnlinePlay } from "../services/gameService";
 import SinglePlayerRoomConfigDialog from "../singleplayer/components/SinglePlayerRoomConfigDialog";
-import { MatchmakingLobby } from "../multiplayer/matchmaking";
-import { Dialog } from "./ui";
+
 import { useState } from "react";
-import { loginWithGoogle } from "../services/firebase";
 
 export default function Home() {
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isQuickMatchOpen, setIsQuickMatchOpen] = useState(false);
-
-  const { isOnlineDialogOpen, isOnboarded, setIsOnlineDialogOpen } =
-    useGameStore();
-
   const handlePlayClick = () => {
     setIsDialogOpen(true);
   };
 
-  const handleOnlinePlayClick = () => {
-    handleOnlinePlay(user);
-  };
-
-  const handleQuickMatchClick = async () => {
-    if (!user) {
-      const { user: newUser } = await loginWithGoogle();
-      if (newUser) {
-        setIsQuickMatchOpen(true);
-      } else {
-        // Login failed
-      }
-    }
-    setIsQuickMatchOpen(true);
-  };
-
-  const handleConfirm = () => {
+  const startSinglePlayer = () => {
     setIsDialogOpen(false);
     navigate("/room");
   };
@@ -88,7 +60,7 @@ export default function Home() {
           }}
           className="font-game text-white max-w-md text-center bg-green-500 p-2 px-4 rounded-sm flex items-center justify-center space-x-2"
         >
-          <Star /> <span>Now Play Online</span>
+          <Star /> <span>Online Soon</span>
         </motion.div>
         <div className="text-gray-500 text-lg max-w-md text-center">
           A simple game of war, where you can play against the computer or
@@ -100,31 +72,13 @@ export default function Home() {
         <Button variant="blue" onClick={handlePlayClick}>
           Play
         </Button>
-        <Button variant="green" onClick={handleQuickMatchClick}>
-          Quick Match
-        </Button>
-        <Button onClick={handleOnlinePlayClick}>Online Rooms</Button>
       </div>
 
       <SinglePlayerRoomConfigDialog
-        handleConfirm={handleConfirm}
+        handleConfirm={startSinglePlayer}
         isDialogOpen={isDialogOpen}
         onClose={() => setIsDialogOpen(false)}
       />
-
-      <OnlineLobbyDialog
-        isOnboarded={isOnboarded}
-        isOpen={isOnlineDialogOpen}
-        onClose={() => setIsOnlineDialogOpen(false)}
-      />
-
-      <Dialog
-        isOpen={isQuickMatchOpen}
-        onClose={() => setIsQuickMatchOpen(false)}
-        title="Quick Match"
-      >
-        <MatchmakingLobby onClose={() => setIsQuickMatchOpen(false)} />
-      </Dialog>
     </div>
   );
 }

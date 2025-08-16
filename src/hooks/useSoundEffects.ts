@@ -74,6 +74,10 @@ export const useSoundEffects = () => {
     playBeep(1000, 100, 0.3);
   }, [playBeep]);
 
+  const playGameFinishSound = useCallback(() => {
+    playBeep(1500, 300, 0.4);
+  }, [playBeep]);
+
   return {
     playCountdownBeep,
     playGoSound,
@@ -83,5 +87,6 @@ export const useSoundEffects = () => {
     playDrawSound,
     playSelectionSound,
     playTimeoutWarning,
+    playGameFinishSound,
   };
 };

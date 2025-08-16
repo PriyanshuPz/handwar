@@ -35,8 +35,8 @@ export interface SinglePlayerGameState {
   computerChoice: Choice | null;
 
   // Results
-  roundWinner: "player" | "computer" | "draw" | null;
-  gameWinner: "player" | "computer" | "draw" | null;
+  roundWinner: "player" | "opponent" | "draw" | null;
+  gameWinner: "player" | "opponent" | "draw" | null;
 
   // Animations
   playerAnimation: AnimationState;
@@ -46,7 +46,7 @@ export interface SinglePlayerGameState {
   gameStarted: boolean;
 }
 
-export type RoundResult = "player" | "computer" | "draw" | null;
+export type RoundResult = "player" | "opponent" | "draw" | null;
 
 export interface SinglePlayerGameActions {
   // Game controls
@@ -70,7 +70,7 @@ export interface SinglePlayerGameActions {
     playerAnimation: AnimationState,
     computerAnimation: AnimationState
   ) => void;
-  finishRound: (roundWinner: "player" | "computer" | "draw") => void;
+  finishRound: (roundWinner: "player" | "opponent" | "draw") => void;
 
   chanceHistory: RoundResult[];
 

@@ -16,5 +16,4 @@ The project is designed to be **scalable** — starting with the original RPS se
 **Tech Stack**
 
 - **Frontend:** Vite + React + Tailwind CSS
-- **Backend:** Firebase (Realtime Database / Firestore, Hosting, optional Auth)
 - **Deployment:** Firebase Hosting (one-command deploy)

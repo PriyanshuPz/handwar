@@ -15,8 +15,11 @@ export function getWinner(
 }
 
 export function generateComputerChoice(): Choice {
+  //  make it more fun
   const choices: Choice[] = ["rock", "paper", "scissors"];
-  return choices[Math.floor(Math.random() * 3)];
+
+  const randomness = Math.random();
+  return choices[Math.floor(randomness * choices.length)];
 }
 
 export function getDefaultChoice(): Choice {
