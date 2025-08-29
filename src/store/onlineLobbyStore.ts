@@ -6,7 +6,7 @@ import type { Room } from "colyseus.js";
 // We'll use this server URL based on environment
 const SERVER_URL =
   import.meta.env.VITE_COLYSEUS_SERVER_URL ||
-  (import.meta.env.DEV ? "ws://localhost:2567" : "wss://your-prod-server.com");
+  (import.meta.env.DEV ? "ws://localhost:2567" : "https://handwar.onrender.com");
 
 interface RoomInfo {
   roomId: string;
