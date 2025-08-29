@@ -2,7 +2,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import * as Colyseus from "colyseus.js";
 import type { Room } from "colyseus.js";
-import type { GameRoomState } from "../../backend/src/rooms/schema/GameRoomState";
 
 // We'll use this server URL based on environment
 const SERVER_URL =
@@ -18,6 +17,8 @@ interface RoomInfo {
   phase: string;
   gameStarted: boolean;
 }
+
+type GameRoomState = any;
 
 interface LobbyState {
   rooms: Map<string, RoomInfo>;
