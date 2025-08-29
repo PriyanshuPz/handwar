@@ -45,5 +45,9 @@ export function RoundIndicators({
     );
   }
 
-  return <div className="flex justify-center my-2 mb-6">{indicators}</div>;
+  return (
+    <div className="flex justify-center my-2 mb-6 flex-col fixed top-1/2 right-2">
+      {indicators}
+    </div>
+  );
 }

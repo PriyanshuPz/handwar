@@ -21,7 +21,7 @@ export function ActionButtons({
         initial={{ y: 100, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         exit={{ y: 100, opacity: 0 }}
-        className="flex justify-center space-x-6 py-4 -mt-10"
+        className="flex justify-center space-x-6 py-4 -mt-10 fixed bottom-0"
       >
         {choices.map((choice) => (
           <Button

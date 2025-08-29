@@ -74,13 +74,6 @@ export function SinglePlayerRoom() {
         Quit
       </button>
 
-      <div className="absolute top-[80%] left-0 -translate-y-1/2 -rotate-90 text-5xl font-game text-gray-300/60 tracking-widest opacity-80 select-none">
-        Player
-      </div>
-      <div className="absolute top-[20%] -right-0 -translate-y-1/2 rotate-90 text-5xl font-game text-gray-300/60 tracking-widest opacity-80 select-none">
-        Computer
-      </div>
-
       <div className="flex-1 flex flex-col justify-between items-center">
         <div className="flex justify-center">
           <HandSprite

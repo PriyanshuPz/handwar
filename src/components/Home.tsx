@@ -21,7 +21,6 @@ export default function Home() {
 
   return (
     <div className="min-h-screen p-6 bg-primary flex items-center justify-between flex-col space-y-2">
-      <div />
       <div className="flex flex-col items-center justify-center space-y-4 w-full">
         <div className="relative text-center overflow-hidden transform -rotate-8 w-full h-full">
           <motion.div
@@ -60,7 +59,7 @@ export default function Home() {
           }}
           className="font-game text-white max-w-md text-center bg-green-500 p-2 px-4 rounded-sm flex items-center justify-center space-x-2"
         >
-          <Star /> <span>Online Soon</span>
+          <Star /> <span>Online Multiplayer Available!</span>
         </motion.div>
         <div className="text-gray-500 text-lg max-w-md text-center">
           A simple game of war, where you can play against the computer or
@@ -70,7 +69,10 @@ export default function Home() {
 
       <div className="flex space-y-2 flex-col w-full max-w-md mt-4">
         <Button variant="blue" onClick={handlePlayClick}>
-          Play
+          Play vs Computer
+        </Button>
+        <Button onClick={() => navigate("/multiplayer")}>
+          Play with Friends
         </Button>
       </div>
 

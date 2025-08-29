@@ -10,6 +10,9 @@ interface GameResultDialogProps {
   totalRounds: number;
   onReplay: () => void;
   onGoHome: () => void;
+  isMultiplayer?: boolean;
+  isHost?: boolean;
+  opponentName?: string;
 }
 
 export function GameResultDialog({
@@ -21,23 +24,28 @@ export function GameResultDialog({
   totalRounds,
   onReplay,
   onGoHome,
+  isMultiplayer = false,
+  isHost = false,
+  opponentName = "Opponent",
 }: GameResultDialogProps) {
   const getResultMessage = () => {
     if (gameWinner === "player") return " You Won!";
-    if (gameWinner === "computer") return "You Lost!";
+    if (gameWinner === "opponent" || gameWinner === "computer")
+      return "You Lost!";
     return "It's a Draw!";
   };
 
   const getResultColor = () => {
     if (gameWinner === "player") return "text-green-600";
-    if (gameWinner === "computer") return "text-red-600";
+    if (gameWinner === "opponent" || gameWinner === "computer")
+      return "text-red-600";
     return "text-yellow-600";
   };
 
   const getResultDescription = () => {
     if (gameWinner === "player")
       return "Congratulations! You dominated the battlefield!";
-    if (gameWinner === "computer")
+    if (gameWinner === "opponent" || gameWinner === "computer")
       return "Better luck next time! Keep practicing!";
     return "Great match! You're evenly matched!";
   };
@@ -57,18 +65,32 @@ export function GameResultDialog({
             <span className={gameWinner === "player" ? "text-green-600" : ""}>
               You: {playerScore}
             </span>
-            <span className={gameWinner === "computer" ? "text-red-600" : ""}>
-              Computer: {computerScore}
+            <span
+              className={
+                gameWinner === "opponent" || gameWinner === "computer"
+                  ? "text-red-600"
+                  : ""
+              }
+            >
+              {isMultiplayer ? opponentName : "Computer"}: {computerScore}
             </span>
           </div>
           <p className="text-sm text-gray-600">Best of {totalRounds} rounds</p>
         </div>
 
         <div className="space-y-3">
-          <Button onClick={onReplay} variant="blue">
-            Play Again
+          {!isMultiplayer || isHost ? (
+            <Button onClick={onReplay} variant="blue">
+              Play Again
+            </Button>
+          ) : (
+            <p className="text-sm text-gray-600 italic">
+              Waiting for host to start a new game...
+            </p>
+          )}
+          <Button onClick={onGoHome}>
+            {isMultiplayer ? "Leave Room" : "Home"}
           </Button>
-          <Button onClick={onGoHome}>Home</Button>
         </div>
       </div>
     </Dialog>
