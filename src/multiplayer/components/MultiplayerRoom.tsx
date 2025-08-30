@@ -30,6 +30,8 @@ export function MultiplayerRoom() {
     requestNextRound,
     requestRestart,
     leaveRoom,
+    availableRooms,
+    error,
   } = useOnlineLobbyStore();
 
   // Local state for tracking UI updates
@@ -51,11 +53,16 @@ export function MultiplayerRoom() {
     playerReady: false,
   });
 
+  // Debug state
+  const [showDebug, setShowDebug] = useState(false);
+
   // Set up room state listener
   useEffect(() => {
     if (!roomInstance) {
-      navigate("/");
-      return;
+      console.log("No room instance found, redirecting to home");
+      // Don't navigate immediately, allow a brief moment to see the error state
+      const timeout = setTimeout(() => navigate("/"), 3000);
+      return () => clearTimeout(timeout);
     }
 
     // Listen for room state changes
@@ -63,7 +70,7 @@ export function MultiplayerRoom() {
       if (!state) return;
 
       // Get player info
-      const playerIds = Array.from(state.players.keys()) as string[];
+      const playerIds = Array.from(state.players) as string[];
       const playerId = roomInstance.sessionId;
       const opponentId = playerIds.find((id) => id !== playerId);
 
@@ -201,11 +208,48 @@ export function MultiplayerRoom() {
     toast("Room code copied to clipboard!");
   };
 
+  // Show a loading/error state when there's no room instance
+  if (!roomInstance) {
+    return (
+      <div className="h-screen flex flex-col items-center justify-center p-4">
+        <div className="bg-white border-4 border-black rounded-2xl p-6 w-full max-w-md relative shadow-[0_8px_0px_0px_#000]">
+          <h1 className="text-2xl font-bold mb-4 text-center">
+            {error ? "Error" : "Connecting..."}
+          </h1>
+
+          {error ? (
+            <div className="p-4 bg-red-50 border border-red-200 rounded-md mb-4">
+              <p className="text-red-600">{error}</p>
+              <p className="text-sm text-gray-500 mt-2">
+                Redirecting to home page...
+              </p>
+            </div>
+          ) : (
+            <div className="flex justify-center items-center p-8">
+              <div className="animate-spin h-8 w-8 border-4 border-blue-500 border-t-transparent rounded-full"></div>
+            </div>
+          )}
+
+          <Button className="w-full mt-4" onClick={() => navigate("/")}>
+            Go Home
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
   if (gameState.phase === "waiting") {
     return (
       <div className="h-screen flex flex-col items-center justify-center p-4">
         <div className="bg-white border-4 border-black rounded-2xl p-6 w-full max-w-md relative shadow-[0_8px_0px_0px_#000]">
           <h1 className="text-2xl font-bold mb-4 text-center">Waiting Room</h1>
+
+          {/* Show any errors */}
+          {error && (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-md mb-4">
+              <p className="text-red-600 text-sm">{error}</p>
+            </div>
+          )}
 
           <div className="mb-6 p-4 rounded-md text-center border-4 flex flex-col">
             <div className="flex justify-between">
@@ -275,6 +319,16 @@ export function MultiplayerRoom() {
             <Button className="w-full" variant="outline" onClick={handleGoHome}>
               Leave Room
             </Button>
+
+            {/* Debug panel toggle button */}
+            <Button
+              onClick={() => setShowDebug(!showDebug)}
+              variant="outline"
+              className="w-full text-xs"
+            >
+              {showDebug ? "Hide Debug Info" : "Show Debug Info"}
+            </Button>
+
             {gameState.opponentName === "Waiting for opponent..." && (
               <p className="text-sm text-center text-yellow-300">
                 You need an opponent to start the game
@@ -287,6 +341,46 @@ export function MultiplayerRoom() {
                   Waiting for {gameState.opponentName} to be ready...
                 </p>
               )}
+
+            {/* Debug information panel */}
+            {showDebug && (
+              <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-md text-xs">
+                <h3 className="font-bold mb-1">Debug Information</h3>
+                <div className="mb-2">
+                  <p>
+                    <strong>Room ID:</strong>{" "}
+                    {roomInstance?.roomId || "unknown"}
+                  </p>
+                  <p>
+                    <strong>Access Code:</strong> {accessCode}
+                  </p>
+                  <p>
+                    <strong>Host:</strong> {isHost ? "Yes" : "No"}
+                  </p>
+                  <p>
+                    <strong>Players:</strong>{" "}
+                    {roomInstance?.state?.players?.size || 0}/2
+                  </p>
+                </div>
+
+                <h4 className="font-bold mt-2 mb-1">Available Rooms:</h4>
+                <div className="max-h-24 overflow-y-auto">
+                  {Object.keys(availableRooms).length === 0 ? (
+                    <p className="text-gray-500">No rooms available</p>
+                  ) : (
+                    <ul>
+                      {Object.entries(availableRooms).map(([id, room]) => (
+                        <li key={id} className="mb-1">
+                          {id.substring(0, 8)}... -{" "}
+                          {room.accessCode || "No code"}({room.playerCount}/
+                          {room.maxPlayers})
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </div>
