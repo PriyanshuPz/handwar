@@ -2,13 +2,12 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import * as Colyseus from "colyseus.js";
 import type { Room } from "colyseus.js";
+import type { GamePhase } from "../singleplayer";
+import type { Player } from "../types";
+import type { RoundResult } from "../singleplayer/types";
+import { unwrapState } from "../lib/utils";
 
-// We'll use this server URL based on environment
-const SERVER_URL =
-  import.meta.env.VITE_COLYSEUS_SERVER_URL ||
-  (import.meta.env.DEV
-    ? "ws://localhost:2567"
-    : "https://handwar.onrender.com");
+const SERVER_URL = import.meta.env.VITE_COLYSEUS_SERVER_URL;
 
 interface RoomInfo {
   roomId: string;
@@ -20,7 +19,31 @@ interface RoomInfo {
   gameStarted: boolean;
 }
 
-type GameRoomState = any;
+export type GameRoomState = {
+  // Room configuration
+  roomId: string;
+  accessCode: string; // For private room access
+  isPrivate: boolean;
+  maxRounds: number;
+  waitTime: number; // Seconds per round for selection
+
+  // Players in the game
+  players: Record<string, Player>;
+
+  // Game state
+  phase: GamePhase;
+  currentRound: number;
+  countdown: number;
+  selectionTimer: number; // milliseconds
+  gameStarted: boolean;
+
+  // Round results history
+  roundsHistory: RoundResult[];
+
+  // Current round result
+  roundWinner: string | "draw" | null;
+  gameWinner: string | "draw" | null;
+};
 
 interface LobbyState {
   rooms: Map<string, RoomInfo>;
@@ -281,10 +304,6 @@ export const useOnlineLobbyStore = create<OnlineLobbyState>()(
 
       createRoom: async (options) => {
         try {
-          console.log(
-            `[FRONTEND] Starting room creation with options:`,
-            options
-          );
           set({ isCreatingRoom: true, error: null });
 
           // Connect to the lobby first if not connected
@@ -313,7 +332,6 @@ export const useOnlineLobbyStore = create<OnlineLobbyState>()(
             }
           }
 
-          // Create the room directly (not through lobby to avoid complexity)
           console.log(`[FRONTEND] Creating game room...`);
           const room = await client.create<GameRoomState>("game_room", {
             isPrivate: true,
@@ -322,19 +340,19 @@ export const useOnlineLobbyStore = create<OnlineLobbyState>()(
             name: options.username,
           });
 
-          console.log(`[FRONTEND] Game room created with ID: ${room.roomId}`);
-          console.log(`[FRONTEND] Room state:`, {
-            accessCode: room.state.accessCode,
-            isPrivate: room.state.isPrivate,
-            roomId: room.state.roomId,
-          }); // Store room information including access code from server
           set({
             roomId: room.roomId,
-            accessCode: room.state.accessCode,
             roomInstance: room,
             username: options.username,
             isHost: true,
             isCreatingRoom: false,
+          });
+
+          room.onStateChange.once((state) => {
+            const unwrap = unwrapState(state);
+            set({
+              accessCode: unwrap.accessCode,
+            });
           });
 
           // Set up room event handlers
@@ -447,27 +465,26 @@ function setupLobbyEventHandlers(
   lobbyRoom.onStateChange((state: any) => {
     try {
       console.log(`[FRONTEND] Lobby state changed, processing rooms list...`);
-
       const rooms: Record<string, RoomInfo> = {};
       if (state && state.rooms) {
-        // Log the raw rooms data for debugging
-        console.log(`[FRONTEND] Raw lobby state rooms:`, state.rooms);
+        const unwrap = unwrapState(state);
+        Object.entries(unwrap.rooms).forEach(
+          ([roomId, room]: [string, any]) => {
+            console.log(
+              `[FRONTEND] Processing room ${roomId}, access code: ${room.accessCode}`
+            );
 
-        state.rooms.forEach((room: any, roomId: string) => {
-          console.log(
-            `[FRONTEND] Processing room ${roomId}, access code: ${room.accessCode}`
-          );
-
-          rooms[roomId] = {
-            roomId: room.roomId,
-            accessCode: room.accessCode,
-            isPrivate: room.isPrivate,
-            playerCount: room.playerCount,
-            maxPlayers: room.maxPlayers,
-            phase: room.phase,
-            gameStarted: room.gameStarted,
-          };
-        });
+            rooms[roomId] = {
+              roomId: room.roomId,
+              accessCode: room.accessCode,
+              isPrivate: room.isPrivate,
+              playerCount: room.playerCount,
+              maxPlayers: room.maxPlayers,
+              phase: room.phase,
+              gameStarted: room.gameStarted,
+            };
+          }
+        );
       }
 
       console.log(
@@ -512,9 +529,12 @@ function setupRoomEventHandlers(
 ) {
   // Handle when room state changes
   room.onStateChange((state: any) => {
+    const unwrap = unwrapState(state);
+    console.log("[FRONTEND] Room State updated:", unwrap);
     // Check if the current client is the host (first player)
-    if (state && state.players) {
-      const playerIds = Array.from(state.players.keys());
+    if (unwrap && unwrap.players) {
+      const playerIds = Object.keys(unwrap.players);
+      console.log("[FRONTEND] Room State updated:", playerIds);
       if (playerIds.length > 0) {
         const isHost = playerIds[0] === room.sessionId;
         set({ isHost, accessCode: state.accessCode });

@@ -24,8 +24,8 @@ function getWinner(
 }
 
 export class GameRoom extends Room<GameRoomState> {
+  state = new GameRoomState();
   maxClients = 2; // For 1v1 gameplay
-  autoDispose = false; // Don't dispose room when empty, keep it alive for private rooms
 
   // Public property for room filtering
   public accessCode: string;

@@ -16,4 +16,4 @@ The project is designed to be **scalable** — starting with the original RPS se
 **Tech Stack**
 
 - **Frontend:** Vite + React + Tailwind CSS
-- **Deployment:** Firebase Hosting (one-command deploy)
+- **Deployment:** Vercel Hosting

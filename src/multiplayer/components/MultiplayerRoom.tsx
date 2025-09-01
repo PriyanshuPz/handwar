@@ -17,6 +17,7 @@ import type {
 import type { MultiplayerGameState } from "../../types";
 import { Copy } from "lucide-react";
 import { toast } from "sonner";
+import { unwrapState } from "../../lib/utils";
 
 export function MultiplayerRoom() {
   const navigate = useNavigate();
@@ -67,18 +68,21 @@ export function MultiplayerRoom() {
 
     // Listen for room state changes
     const onStateChange = (state: any) => {
-      if (!state) return;
+      const unwrap = unwrapState(state);
+      // check of unwrap is { } empty object return if
+      if (Object.keys(unwrap).length === 0) return;
 
+      if (!unwrap.players) return;
       // Get player info
-      const playerIds = Array.from(state.players) as string[];
+      const playerIds = Array.from(unwrap.players || {}) as string[];
       const playerId = roomInstance.sessionId;
       const opponentId = playerIds.find((id) => id !== playerId);
 
       // Get player states
-      const player = state.players.get(playerId);
+      const player = unwrap.players[playerId];
 
       // Handle the case when we might be the only player in the room
-      const opponent = opponentId ? state.players.get(opponentId) : null;
+      const opponent = opponentId ? unwrap.players[opponentId] : null;
 
       // If player not found, there's a connection issue
       if (!player) {
@@ -86,14 +90,16 @@ export function MultiplayerRoom() {
         return;
       }
 
+      // setting room metadata
+
       // Create a new state object based on current data
       const newGameState: MultiplayerGameState = {
         // Game configuration
-        phase: state.phase as GamePhase,
-        currentRound: state.currentRound || 1,
-        maxRounds: state.maxRounds || 3,
-        countdown: state.countdown || 3,
-        selectionTimer: state.selectionTimer || 3000,
+        phase: unwrap.phase as GamePhase,
+        currentRound: unwrap.currentRound || 1,
+        maxRounds: unwrap.maxRounds || 3,
+        countdown: unwrap.countdown || 3,
+        selectionTimer: unwrap.selectionTimer || 3000,
 
         // Player state
         playerAnimation: (player.animation as AnimationState) || "idle",
@@ -112,26 +118,26 @@ export function MultiplayerRoom() {
 
         // Game results
         roundWinner:
-          state.roundWinner === playerId
+          unwrap.roundWinner === playerId
             ? "player"
-            : state.roundWinner === opponentId
+            : unwrap.roundWinner === opponentId
             ? "opponent"
-            : state.roundWinner === "draw"
+            : unwrap.roundWinner === "draw"
             ? "draw"
             : null,
 
         gameWinner:
-          state.gameWinner === playerId
+          unwrap.gameWinner === playerId
             ? "player"
-            : state.gameWinner === opponentId
+            : unwrap.gameWinner === opponentId
             ? "opponent"
-            : state.gameWinner === "draw"
+            : unwrap.gameWinner === "draw"
             ? "draw"
             : null,
 
         // Round history
         roundsHistory: opponentId
-          ? mapRoundHistory(state.roundsHistory, playerId, opponentId)
+          ? mapRoundHistory(unwrap.roundsHistory, playerId, opponentId)
           : [],
       };
 
@@ -139,8 +145,10 @@ export function MultiplayerRoom() {
       setGameState(newGameState);
 
       // Log when important game state changes happen
-      if (state.phase !== gameState.phase) {
-        console.log(`Game phase changed: ${gameState.phase} -> ${state.phase}`);
+      if (unwrap.phase !== gameState.phase) {
+        console.log(
+          `Game phase changed: ${gameState.phase} -> ${unwrap.phase}`
+        );
       }
     };
 
@@ -244,7 +252,6 @@ export function MultiplayerRoom() {
         <div className="bg-white border-4 border-black rounded-2xl p-6 w-full max-w-md relative shadow-[0_8px_0px_0px_#000]">
           <h1 className="text-2xl font-bold mb-4 text-center">Waiting Room</h1>
 
-          {/* Show any errors */}
           {error && (
             <div className="p-3 bg-red-50 border border-red-200 rounded-md mb-4">
               <p className="text-red-600 text-sm">{error}</p>
@@ -387,7 +394,6 @@ export function MultiplayerRoom() {
     );
   }
 
-  // Game in progress UI (similar to single player)
   return (
     <div className="h-screen flex flex-col justify-between overflow-hidden max-w-md mx-auto">
       <button

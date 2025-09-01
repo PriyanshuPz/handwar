@@ -1,5 +1,5 @@
 import { Room, Client } from "@colyseus/core";
-import { Schema, type, MapSchema, ArraySchema } from "@colyseus/schema";
+import { Schema, type, MapSchema } from "@colyseus/schema";
 
 // Define a schema for room information
 class RoomInfo extends Schema {
