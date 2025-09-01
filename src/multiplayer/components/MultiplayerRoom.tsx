@@ -288,8 +288,8 @@ export function MultiplayerRoom() {
                 <span>{gameState.opponentName}</span>
                 <span
                   className={`px-2 py-1 text-xs ${
-                    gameState.opponentReady ? "bg-green-500" : ""
-                  } text-white rounded`}
+                    gameState.opponentReady ? "bg-green-500 text-white" : ""
+                  } rounded`}
                 >
                   {gameState.opponentReady ? "Ready" : "Waiting..."}
                 </span>
@@ -378,6 +378,7 @@ export function MultiplayerRoom() {
             roundWinner={gameState.roundWinner}
             onStartRound={() => {}} // Managed by server
             onNextRound={handleNextRound}
+            isHost={isHost}
           />
         </div>
 

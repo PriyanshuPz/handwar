@@ -2,10 +2,15 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface TapToPlayOverlayProps {
   isVisible: boolean;
+  isHost?: boolean;
   onTap: () => void;
 }
 
-export function TapToPlayOverlay({ isVisible, onTap }: TapToPlayOverlayProps) {
+export function TapToPlayOverlay({
+  isVisible,
+  onTap,
+  isHost,
+}: TapToPlayOverlayProps) {
   return (
     <AnimatePresence>
       {isVisible && (
@@ -53,6 +58,25 @@ export function TapToPlayOverlay({ isVisible, onTap }: TapToPlayOverlayProps) {
               >
                 Touch anywhere to start
               </motion.div>
+              {isHost ? (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  className="text-sm text-gray-500"
+                >
+                  You can start the round as you are the host
+                </motion.div>
+              ) : (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.8 }}
+                  className="text-sm text-gray-500"
+                >
+                  Only host can start the round
+                </motion.div>
+              )}
             </motion.div>
           </motion.div>
         </motion.div>

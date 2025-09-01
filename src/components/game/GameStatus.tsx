@@ -10,6 +10,7 @@ interface GameStatusProps {
   selectionTimer: number;
   currentRound: number;
   totalRounds: number;
+  isHost?: boolean;
   roundWinner: string | null;
   onStartRound: () => void;
   onNextRound: () => void;
@@ -24,6 +25,7 @@ export function GameStatus({
   roundWinner,
   onStartRound,
   onNextRound,
+  isHost,
 }: GameStatusProps) {
   const [gameStarted, setGameStarted] = useState(false);
   const {
@@ -85,7 +87,8 @@ export function GameStatus({
 
   const getRoundResultMessage = () => {
     if (roundWinner === "player") return "Victory!";
-    if (roundWinner === "computer") return "Defeat!";
+    if (roundWinner === "computer" || roundWinner == "opponent")
+      return "Defeat!";
     if (roundWinner === "draw") return "Draw!";
     return "";
   };
@@ -93,7 +96,13 @@ export function GameStatus({
   const renderPhaseContent = () => {
     switch (phase) {
       case "waiting":
-        return <TapToPlayOverlay isVisible={true} onTap={handleTapToPlay} />;
+        return (
+          <TapToPlayOverlay
+            isVisible={true}
+            onTap={handleTapToPlay}
+            isHost={isHost}
+          />
+        );
 
       case "countdown":
         return (
@@ -213,7 +222,7 @@ export function GameStatus({
                     }}
                     className="text-gray-500 font-medium"
                   >
-                    Tap to continue
+                    {isHost ? "Tap to continue" : "Waiting for host..."}
                   </motion.p>
                 )}
               </motion.div>
