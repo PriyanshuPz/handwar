@@ -31,7 +31,6 @@ export function MultiplayerRoom() {
     requestNextRound,
     requestRestart,
     leaveRoom,
-    availableRooms,
     error,
   } = useOnlineLobbyStore();
 
@@ -54,9 +53,6 @@ export function MultiplayerRoom() {
     playerReady: false,
   });
 
-  // Debug state
-  const [showDebug, setShowDebug] = useState(false);
-
   // Set up room state listener
   useEffect(() => {
     if (!roomInstance) {
@@ -74,7 +70,8 @@ export function MultiplayerRoom() {
 
       if (!unwrap.players) return;
       // Get player info
-      const playerIds = Array.from(unwrap.players || {}) as string[];
+      const playerIds = Object.keys(unwrap.players);
+      console.log(playerIds);
       const playerId = roomInstance.sessionId;
       const opponentId = playerIds.find((id) => id !== playerId);
 
@@ -316,6 +313,7 @@ export function MultiplayerRoom() {
             <Button
               className="w-full"
               onClick={handleReady}
+              variant="green"
               disabled={
                 gameState.playerReady ||
                 gameState.opponentName === "Waiting for opponent..."
@@ -327,67 +325,18 @@ export function MultiplayerRoom() {
               Leave Room
             </Button>
 
-            {/* Debug panel toggle button */}
-            <Button
-              onClick={() => setShowDebug(!showDebug)}
-              variant="outline"
-              className="w-full text-xs"
-            >
-              {showDebug ? "Hide Debug Info" : "Show Debug Info"}
-            </Button>
-
             {gameState.opponentName === "Waiting for opponent..." && (
-              <p className="text-sm text-center text-yellow-300">
+              <p className="text-sm text-center text-yellow-700">
                 You need an opponent to start the game
               </p>
             )}
             {gameState.playerReady &&
               !gameState.opponentReady &&
               gameState.opponentName !== "Waiting for opponent..." && (
-                <p className="text-sm text-center text-yellow-300">
+                <p className="text-sm text-center text-yellow-700">
                   Waiting for {gameState.opponentName} to be ready...
                 </p>
               )}
-
-            {/* Debug information panel */}
-            {showDebug && (
-              <div className="mt-4 p-3 bg-gray-50 border border-gray-200 rounded-md text-xs">
-                <h3 className="font-bold mb-1">Debug Information</h3>
-                <div className="mb-2">
-                  <p>
-                    <strong>Room ID:</strong>{" "}
-                    {roomInstance?.roomId || "unknown"}
-                  </p>
-                  <p>
-                    <strong>Access Code:</strong> {accessCode}
-                  </p>
-                  <p>
-                    <strong>Host:</strong> {isHost ? "Yes" : "No"}
-                  </p>
-                  <p>
-                    <strong>Players:</strong>{" "}
-                    {roomInstance?.state?.players?.size || 0}/2
-                  </p>
-                </div>
-
-                <h4 className="font-bold mt-2 mb-1">Available Rooms:</h4>
-                <div className="max-h-24 overflow-y-auto">
-                  {Object.keys(availableRooms).length === 0 ? (
-                    <p className="text-gray-500">No rooms available</p>
-                  ) : (
-                    <ul>
-                      {Object.entries(availableRooms).map(([id, room]) => (
-                        <li key={id} className="mb-1">
-                          {id.substring(0, 8)}... -{" "}
-                          {room.accessCode || "No code"}({room.playerCount}/
-                          {room.maxPlayers})
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       </div>

@@ -534,7 +534,6 @@ function setupRoomEventHandlers(
     // Check if the current client is the host (first player)
     if (unwrap && unwrap.players) {
       const playerIds = Object.keys(unwrap.players);
-      console.log("[FRONTEND] Room State updated:", playerIds);
       if (playerIds.length > 0) {
         const isHost = playerIds[0] === room.sessionId;
         set({ isHost, accessCode: state.accessCode });
