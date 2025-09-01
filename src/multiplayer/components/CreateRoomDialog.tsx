@@ -88,6 +88,12 @@ export function CreateRoomDialog({
 
         {error && <div className="text-red-500 text-sm mt-2">{error}</div>}
 
+        {/* Render backend message the it can take time due to cold start */}
+
+        <div className="text-sm text-gray-500">
+          This may take a moment due to cold start...
+        </div>
+
         <div className="flex justify-end space-x-2 mt-4">
           <Button variant="outline" onClick={onClose} disabled={isCreatingRoom}>
             Cancel
